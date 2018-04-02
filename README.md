@@ -12,10 +12,6 @@ Database Systems Spring 2018. <hr />
 </ul>
 <hr /> 
 
-### Wiki page
-You can find the updates and details about the wiki here</a>.
-<hr />
-
 ### Description:
 <p>
 </p>
