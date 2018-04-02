@@ -6,7 +6,7 @@ Database Systems Spring 2018. <hr />
 ### Members:
 <ul>
 <li>Kaan Akturk</li>
-<li>Pelin ELbin Gunay</li>
+<li>Pelin Elbin Gunay</li>
 <li>Hareem Larik</li>
 <li>Emine Ayse Sunar</li>
 </ul>
@@ -22,5 +22,6 @@ The project is a Scientific Paper Management System
 ### Documents
 <ol>
 <li> <a href="https://github.com/hlarik/CS353_Spring18/blob/master/Docs/Project%20Proposal.pdf"> Project Proposal Report </a> </li>
+<li> <a href="https://github.com/hlarik/CS353_Spring18/blob/master/Docs/Project%20Design%20Report.pdf"> Project Design Report </a> </li>
 </ol>
 
