@@ -1,0 +1,32 @@
+.navbar(
+border-bottom: #1886C7 5px solid;
+
+)
+
+.navbar .navbar-brand {
+    color: #1886C7;
+    font-size: 24px;
+    
+    
+}
+
+.bg-dark {
+    background-color: rgba(0,0,0,.7) !important;
+    
+}
+
+
+
+.nav-link:lover {
+    color: #1886C7 !important;
+   
+    
+}
+#headerSection{
+    background: url('../images/giris.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    
+}
+
+
