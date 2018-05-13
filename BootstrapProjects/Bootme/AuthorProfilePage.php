@@ -75,7 +75,7 @@
 						echo "<p>Zipcode</p>";
 					echo"</div>";
 					echo "<div class='col-7'>";
-						$row = $result->fetch_assoc();
+						/*$row = $result->fetch_assoc();
 						echo "<p>" $row["name"] "</p>"; 
 						echo "<p>" $row["username"] "</p>"; 
 						echo "<p>" $row["password"] "</p>"; 
@@ -83,7 +83,7 @@
 						echo "<p>" $row["country"] "</p>";
 						echo "<p>" $row["city"] "</p>";
 						echo "<p>" $row["street"] "</p>";
-						echo "<p>" $row["zip-code"] "</p>";
+						echo "<p>" $row["zip-code"] "</p>";*/
 					echo"</div>";
 				echo"</div>";
 				echo"<div class='form-row pt-5'>";
