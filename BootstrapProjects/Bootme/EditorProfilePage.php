@@ -19,16 +19,13 @@
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="nav navbar-nav right">
 					<li class="active">
-						<a class="nav-link" href="#">Home</a>
+						<a class="nav-link" href="SearchPage.php">Home</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">About</a>
+						<a class="nav-link" href="About.php">About</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Our Team</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Sign out</a>
+						<a class="nav-link" href="LoginPage.php">Sign out</a>
 					</li>
 				</ul>
 			</div>
@@ -46,10 +43,9 @@
 				die("Connection failed: " . mysqli_connect_error());
 			}
 			
-			$user_username = $_POST['username'];
-			$user_password = $_POST['password'];
-			
-			$result = $conn->query("SELECT * FROM subscriber WHERE username = '$user_username' AND password = '$user_password'");
+			$user_username = $_SESSION['username'];
+			$result = $conn->query("SELECT * FROM subscriber WHERE username = '$user_username'");
+			$row = $result->fetch_assoc();
 			
 			echo "<div class='container'>";	
 				echo "<div class='form-row pt-5'>";
@@ -71,35 +67,16 @@
 						echo "<p>Street</p>";
 						echo "<p>Zipcode</p>";
 					echo"</div>";
-					echo "<div class='col-7'>";
-                        $row = $result->fetch_assoc();
-							if(  $row["username"] == HaruChan )
-								//echo "<p>" . "hhhhhhhhhh" .  "</p>"; 
-							echo "<p>" . $row["name"] .  "</p>"; 
-							echo "<p>" . $row["username"] ."</p>"; 
-							echo "<p>" . $row["password"] . "</p>"; 
-							echo "<p>" . $row["email"] . "</p>";
-							echo "<p>" . $row["country"] . "</p>";
-							echo "<p>" . $row["city"] . "</p>";
-							echo "<p>" . $row["street"] . "</p>";
-							echo "<p>" . $row["zip-code"] . "</p>";
-					/*<p class="text-left">Right aligned text on all viewport sizes.</p>
-						<p class="text-left">Right aligned text on all viewport sizes.</p>
-                        <p class="text-left">Right aligned text on all viewport sizes.</p>
-                        <p class="text-left">Right aligned text on all viewport sizes.</p>
-                        <p class="text-left">Right aligned text on all viewport sizes.</p>
-                        <p class="text-left">Right aligned text on all viewport sizes.</p>
-                        <p class="text-left">Right aligned text on all viewport sizes.</p>
-						/*$row = $result->fetch_assoc();
-						echo "<p>" $row["name"] "</p>"; 
-						echo "<p>" $row["username"] "</p>"; 
-						echo "<p>" $row["password"] "</p>"; 
-						echo "<p>" $row["email"] "</p>";
-						echo "<p>" $row["country"] "</p>";
-						echo "<p>" $row["city"] "</p>";
-						echo "<p>" $row["street"] "</p>";
-						echo "<p>" $row["zip-code"] "</p>";*/
-					echo"</div>";
+					echo "<div class='col-6 pl-5'>";
+							echo "<p>". $row["name"] . "</p>";
+							echo "<p>". $row["username"] . "</p>";
+							echo "<p>". $row["password"] . "</p>";
+							echo "<p>". $row["email"] . "</p>";
+							echo "<p>". $row["country"] . "</p>";
+							echo "<p>". $row["city"] . "</p>";
+							echo "<p>". $row["street"] . "</p>";
+							echo "<p>". $row["zipcode"] . "</p>";
+					echo"</div>";	
 				echo"</div>";
 				echo"<div class='form-row pt-5'>";
 					echo"<div class='col-2'>";
@@ -108,9 +85,6 @@
 				echo"</div>";
 			echo"</div>";
 		?>
-	
-		
-	
 	
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

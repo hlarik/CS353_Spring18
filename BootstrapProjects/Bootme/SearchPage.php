@@ -29,36 +29,6 @@
 			}
 			$user_username = $_SESSION['usernm'];
 			
-			/*echo "<nav class='navbar navbar-expand-lg navbar-dark bg-dark'>";
-				echo "<a class='navbar-brand' href='#'>PURE Digital Library</a>";
-				echo "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation'>";
-					echo "<span class='navbar-toggler-icon'></span>";
-				echo "</button>";
-				echo "<div class='collapse navbar-collapse' id='navbarNav'>";
-					echo "<ul class='nav navbar-nav right'>";
-						echo "<form action='SearchPage.php' method='POST'>";	
-							echo "<li class='active'>";
-								echo "<a class='nav-link' href='#'>Home</a>";
-							echo "</li>";
-							echo "<li class='nav-item'>";
-								echo "<a class='nav-link' href='#'>About</a>";
-							echo "</li>";
-							echo "<li class='nav-item'>";
-								echo "<a class='nav-link' href='#'>Our Team</a>";
-							echo "</li>";
-							echo "<li class='nav-item'>";
-								echo "<a class='nav-link' href='#'>Contact Us</a>";
-							echo "</li>";
-							echo "<li class='nav-item'>";
-								echo "<a class='nav-link' href='#'>Sign out</a>";
-							echo "</li>";
-							echo "<li>";
-								echo "<input class='btn btn-default navbar-btn' type='submit' name='FormBtn' value='My Profile'>";
-							echo "</li>";
-						echo "</form>";	
-					echo "</ul>";
-				echo "</div>";
-			echo "</nav>";*/
 			echo "<form action='SearchPage.php' method='POST'>";
 				echo "<nav class='navbar navbar-expand-lg navbar-dark bg-dark'>";
 					echo "<nav class='navbar navbar-light bg-dark'>";
@@ -147,7 +117,7 @@
 					$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 					$togo = substr($actual_link, 0, strpos($actual_link, '/SearchPage.php'));
 					
-					header("Location: $togo?username=".$user_username);
+					//header("Location: $togo?username=".$user_username);
 					if(  $row["privilegeID"] == 1 ){
 						$togo = $togo . "/AuthorProfilePage.php";
 						header("Location: $togo?username=".$user_username);
@@ -168,8 +138,6 @@
 			}
 		?>
 		
-		
-
 		<div class="jumbotron text-center">
 			<div class="container">
 				<h1>PURE Digital Library</h1>
