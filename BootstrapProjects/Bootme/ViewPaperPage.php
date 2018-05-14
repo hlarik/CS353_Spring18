@@ -11,34 +11,10 @@
     <title>PURE Digital Library</title>
   </head>
   <body> 
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<a class="navbar-brand" href="#">PURE Digital Library</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="nav navbar-nav right">
-				<li class="active">
-					<a class="nav-link" href="SearchPage.html">Home</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">About</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Our Team</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Sign out</a>
-				</li>
-			</ul>
-		</div>
-	</nav>
+  
+	
 	
 	<div class="container">	
-
-		
-
-		
 		<form action="ViewPaperPage.php" method="POST">
 			<div class="row pt-5">
 				<div class="col-10">
@@ -83,9 +59,10 @@
 		die("Connection failed: " . mysqli_connect_error());
 		}
 		//$user_username = $_GET['user_username'];
-		$user_username = "KaanKuhn";
+		//$user_username = "KaanKuhn";
 		//give a predefined paperID for now
 		//$paperID = $_GET['paperID'];
+		$user_username = $_SESSION[''];
 		$paperID = 1001;
 
 		//insert ignore ignores if
@@ -93,7 +70,34 @@
 								('$user_username', $paperID, 0, 0, 1)");//" WHERE ($user_username, paperID) NOT IN (SELECT username, paperID FROM subscriber_likes_downloads_views_paper)");
 
 		$comments =  $conn->query("SELECT text1, username FROM comment NATURAL JOIN subscriber_comment_paper"); //get texts assciated with this paper
-
+		
+		echo "<form action='ViewPaperPage.php' method='POST'>";
+			echo "<nav class='navbar navbar-expand-lg navbar-dark bg-dark'>";
+				echo "<nav class='navbar navbar-light bg-dark'>";
+					echo "<span class='navbar-brand mb-0 h1'>PURE Digital Library</span>";
+				echo "</nav>";
+				echo "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation'>";
+					echo "<span class='navbar-toggler-icon'></span>";
+				echo "</button>";
+				echo "<div class='collapse navbar-collapse' id='navbarNav'>";
+					echo "<ul class='nav navbar-nav right'>";
+						echo "<li class='nav-item'>";
+							echo "<a class='nav-link active' href='#'>Home</a>";
+						echo "</li>";
+						echo "<li class='nav-item'>";
+							echo "<a class='nav-link' href='About.php'>About</a>";
+						echo "</li>";
+						echo "<li class='nav-item'>";
+							echo "<a class='nav-link' href='LoginPage.php'>Sign out</a>";
+						echo "</li>";
+						echo "<li>";
+							echo "<input class='btn btn-default navbar-btn' type='submit' name='FormBtn' value='My Profile'>";
+						echo "</li>";
+					echo "</ul>";
+				echo "</div>";
+			echo "</nav>";
+		echo "</form>";	
+		
 		echo "<br><br>";
 		echo "<div class='container'  id='comment_container'>";
 			echo "<form>";
@@ -137,7 +141,7 @@
                         VALUES ('$username', '$journal_name')");*/
             }
             
-          if(isset($_POST['submit'])){
+			if(isset($_POST['submit'])){
           		$comment_input = $_POST["comment"];
                 if($comment_input != '' ){
                		$commentID = rand();
@@ -150,8 +154,35 @@
                		
                     $result = $conn->query("INSERT INTO comment (commentID, text1, date1) VALUES ($commentID, '$comment_input', date('Y-M-D'))");
                     $result2 = $conn->query("INSERT INTO subscriber_comment_paper (username, paperID, commentID) VALUES ('$user_username', $paperID, $commentID)");
-               }
-          }
+				}
+			}
+			
+			if(isset($_POST['FormBtn'])){
+					$result = $conn->query("SELECT * FROM subscriber WHERE username = '$user_username'");
+					$row = $result->fetch_assoc();
+					$_SESSION['username'] = $user_username;
+					
+					$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+					$togo = substr($actual_link, 0, strpos($actual_link, '/SearchPage.php'));
+					
+					//header("Location: $togo?username=".$user_username);
+					if(  $row["privilegeID"] == 1 ){
+						$togo = $togo . "/AuthorProfilePage.php";
+						header("Location: $togo?username=".$user_username);
+					}
+					elseif ( $row["privilegeID"] == 2) {
+						$togo = $togo . "/EditorProfilePage.php";
+						header("Location: $togo?username=".$user_username);	
+					}
+					elseif ( $row["privilegeID"] == 3 ) {
+						$togo = $togo . "/ReviewerProfilePage.php";
+						header("Location: $togo?username=".$user_username);
+					}
+					elseif ( $row["privilegeID"] == 4 ) {
+						$togo = $togo . "/RegularUserProfilePage.php";
+						header("Location: $togo?username=".$user_username);
+					}
+				}
         }
   	?>
 

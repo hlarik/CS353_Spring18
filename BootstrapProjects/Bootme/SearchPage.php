@@ -57,9 +57,6 @@
 				echo "</nav>";
 			echo "</form>";	
 				
-			
-			//echo "<p>Username" . $user_username . "</p>"; ///BURAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-			
 			if($_SERVER['REQUEST_METHOD'] === 'POST'){
 				if(isset($_POST['search'])){
 					$search_input = $_POST["search_input"];
