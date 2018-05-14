@@ -85,10 +85,7 @@
 		<div class="collapse navbar-collapse" id="navbarNav">
 			<ul class="nav navbar-nav right">
 				<li class="nav-item">
-					<a class="nav-link" href="#">About</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Contact Us</a>
+					<a class="nav-link" href="About.php">About</a>
 				</li>
 			</ul>
 		</div>

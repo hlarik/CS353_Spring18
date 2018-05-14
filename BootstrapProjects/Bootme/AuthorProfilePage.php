@@ -19,16 +19,13 @@
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="nav navbar-nav right">
 					<li class="active">
-						<a class="nav-link" href="#">Home</a>
+						<a class="nav-link" href="SearchPage.php">Home</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">About</a>
+						<a class="nav-link" href="About.php">About</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Our Team</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Sign out</a>
+						<a class="nav-link" href="LoginPage.php">Sign out</a>
 					</li>
 				</ul>
 			</div>
@@ -37,7 +34,6 @@
 		<?php
 			session_start();
 
-			//create connection
 			$url = "dijkstra.ug.bcc.bilkent.edu.tr" ;
 			$username = "ayse.sunar";
 			$password = "rzmr3c1fn";
@@ -48,54 +44,51 @@
 			if (!$conn) {
 				die("Connection failed: " . mysqli_connect_error());
 			}
-			
-			$user_username = $_POST['username'];
-			$user_password = $_POST['password'];
-			
-			$result = $conn->query("SELECT * FROM subscriber WHERE username = '$user_username' AND password = '$user_password'");
-			
+			$user_username = $_SESSION['username'];
+			$result = $conn->query("SELECT * FROM subscriber WHERE username = '$user_username'");
+			$row = $result->fetch_assoc();
+						
 			echo "<div class='container'>";	
-				echo "<div class='form-row pt-5'>";
-					echo "<h1>My Profile</h1>";
-				echo "</div>";
-				echo "<div class='form-row pt-5'>";
-					echo "<div class='col-2'>";
-						echo "<button class='btn-lg btn-primary my-2' type='submit'>My Papers</button>";
-						echo "<button class='btn-lg btn-primary my-2' type='submit'>Journals</button>";
-						echo "<button class='btn-lg btn-primary my-2' type='submit'>Submit Paper</button>";
+			echo "<div class='form-row pt-5'>";
+				echo "<h1>My Profile</h1>";
+			echo "</div>";
+				echo "<form>";
+					echo "<div class='form-row pt-5'>";
+						echo "<div class='col-2'>";
+							echo "<button class='btn-lg btn-primary my-2' type=submit'>My Papers</button>";
+							echo "<button class='btn-lg btn-primary my-2' type='submit'>Journals</button>";
+							echo "<button class='btn-lg btn-primary my-2' type='submit'>Submit Paper</button>";
+						echo "</div>";
+						echo "<div class='col-2 pl-5'>";
+							echo "<p>Name</p>";
+							echo "<p>Username</p>";
+							echo "<p>Password</p>";
+							echo "<p>Email</p>";
+							echo "<p>Country</p>";
+							echo "<p>City</p>";
+							echo "<p>Street</p>";
+							echo "<p>Zipcode</p>";
+						echo "</div>";
+						echo "<div class='col-6 pl-5'>";
+							echo "<p>". $row["name"] . "</p>";
+							echo "<p>". $row["username"] . "</p>";
+							echo "<p>". $row["password"] . "</p>";
+							echo "<p>". $row["email"] . "</p>";
+							echo "<p>". $row["country"] . "</p>";
+							echo "<p>". $row["city"] . "</p>";
+							echo "<p>". $row["street"] . "</p>";
+							echo "<p>". $row["zipcode"] . "</p>";
+						echo "</div>";
 					echo "</div>";
-					echo "<div class='col-3 pl-5'>";
-						echo "<p>Name</p>";
-						echo "<p>Username</p>";
-						echo "<p>Password</p>";
-						echo "<p>Email</p>";
-						echo "<p>Country</p>";
-						echo "<p>City</p>";
-						echo "<p>Street</p>";
-						echo "<p>Zipcode</p>";
-					echo"</div>";
-					echo "<div class='col-7'>";
-						/*$row = $result->fetch_assoc();
-						echo "<p>" $row["name"] "</p>"; 
-						echo "<p>" $row["username"] "</p>"; 
-						echo "<p>" $row["password"] "</p>"; 
-						echo "<p>" $row["email"] "</p>";
-						echo "<p>" $row["country"] "</p>";
-						echo "<p>" $row["city"] "</p>";
-						echo "<p>" $row["street"] "</p>";
-						echo "<p>" $row["zip-code"] "</p>";*/
-					echo"</div>";
-				echo"</div>";
-				echo"<div class='form-row pt-5'>";
-					echo"<div class='col-2'>";
-						echo"<button class='btn-lg btn-primary my-2' type='submit'>Delete Account</button";
-					echo"</div>";
-				echo"</div>";
-			echo"</div>";
+					//echo "<p> . Username" . $user_username . "</p>"; ///BURAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+					echo "<div class='form-row pt-5'>";
+						echo "<div class='col-2'>";
+							echo "<button class='btn-lg btn-primary my-2' type='submit'>Delete Account</button>";
+						echo "</div>";
+					echo "</div>";
+				echo "</form>";
+			echo "</div>";
 		?>
-	
-		
-	
 	
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

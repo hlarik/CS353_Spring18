@@ -25,13 +25,10 @@
 				</li>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">About</a>
+					<a class="nav-link" href="About.php">About</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">Our Team</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Sign out</a>
+					<a class="nav-link" href="LoginPage.php">Sign out</a>
 				</li>
 				<!-- <li class="nav-item">
 				<a class="nav-link disabled" href="#">Disabled</a>
@@ -88,23 +85,63 @@
 		die("Connection failed: " . mysqli_connect_error());
 		}
 
-		$search_input = 'How to';
+		//get info from searc page
+		$user_username = $_GET['user_username'];
+		$search_input = $_GET['search_input'];
+		$search_by = $_GET['gridRadios'];
+		$sort = $_GET['sortRadios'];
+		$language = $_GET['language'];
+		$status_input = $_GET['status'];
+		$year_input = $_GET['year'];
+
+
+		//$search_input = 'How to';
 
 		//search by 
 		// 1 --> title		2 --> author		3 --> journal		4 --> inst. 	5 --> conference
-		$search_by = 1;
+		//$search_by = 1;
 
 		//sort according to 
 		// 1 --> views		2 --> Likes		3 --> Downloads		4 --> Pages
-		$sort = 1;
+		//$sort = 1;
 
 		//staus according to 
 		// 2 --> submitted		3 --> on review 	4 --> accepted 		5 --> rejected
+		//$status = 2;
+		if($status_input == 1){//strcmp(trim($status_input),"Accepted") == 0){//$status_input  == "Accepted"){
+			$status = 1;
+			$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			$togo = substr($actual_link, 0, strpos($actual_link, '/ResultsPage.php'));
+			$togo = $togo . "/LoginPage.php";
+			//echo $togo;
+			header("Location: $togo");
+		}
+		else if($status_input == 2){//strcmp(trim($status_input),"On review (Pending)") == 0){//$status_input  == "On review (Pending)"){
+			$status = 2;
+		}
+		else if($status_input == 3){//strcmp(trim($status_input),"Submitted") == 0){//$status_input  == "Submitted"){
+			$status = 3;
+		}
+		else if($status_input == 4){//strcmp(trim($status_input),"Rejected") == 0){//$status_input  == "Rejected"){
+			$status = 4;
+		}
 		$status = 2;
 
 		//language according to 
 		// 2 --> English		3 --> Turkish
+
 		$language = 'Turkish';
+		
+
+		if($year_input == "2010-2020"){
+			$year = 2015;
+		}
+		else if($year_input == "2000-2010"){
+			$year = 2005;
+		}
+		else if($year_input == "1990-2000"){
+			$year = 1995;
+		}
 
 		//year according to 
 		$year = 2017;
@@ -113,21 +150,31 @@
 			case 1:
 				switch($sort){
 					case 1:
-						$temp = $conn->query("SELECT * FROM scientific_research_paper NATURAL JOIN author_has_paper
-												WHERE title LIKE '%$search_input%' AND language = '$language' AND release_date BETWEEN $year-5 AND $year+5 AND status = $status");
+						$result = $conn->query("SELECT DISTINCT * FROM 
+						(SELECT DISTINCT * FROM scientific_research_paper S NATURAL JOIN author_has_paper A
+						WHERE S.title LIKE '%$search_input%' AND S.language = '$language' AND S.release_date BETWEEN $year-5 AND $year+5 AND S.status = $status) T
+						LEFT OUTER JOIN 
+						(SELECT paperID, SUM(isViewed) AS tot_view, SUM(isLiked) AS tot_like, SUM(isDownloaded) AS tot_download FROM subscriber_likes_downloads_views_paper GROUP BY paperID) R 
+						ON (R.paperID = T.paperID) ORDER T.tot_view BY DESC");
 
 					break;
 
 					case 2:
-
+						$result = $conn->query("SELECT DISTINCT * FROM 
+						(SELECT DISTINCT * FROM scientific_research_paper S NATURAL JOIN author_has_paper A
+						WHERE S.title LIKE '%$search_input%' AND S.language = '$language' AND S.release_date BETWEEN $year-5 AND $year+5 AND S.status = $status) T
+						LEFT OUTER JOIN 
+						(SELECT paperID, SUM(isViewed) AS tot_view, SUM(isLiked) AS tot_like, SUM(isDownloaded) AS tot_download FROM subscriber_likes_downloads_views_paper GROUP BY paperID) R 
+						ON (R.paperID = T.paperID) ORDER T.tot_like BY DESC");
 					break;
 
 					case 3:
-
-					break;
-
-					case 4:
-
+						$result = $conn->query("SELECT DISTINCT * FROM 
+						(SELECT DISTINCT * FROM scientific_research_paper S NATURAL JOIN author_has_paper A
+						WHERE S.title LIKE '%$search_input%' AND S.language = '$language' AND S.release_date BETWEEN $year-5 AND $year+5 AND S.status = $status) T
+						LEFT OUTER JOIN 
+						(SELECT paperID, SUM(isViewed) AS tot_view, SUM(isLiked) AS tot_like, SUM(isDownloaded) AS tot_download FROM subscriber_likes_downloads_views_paper GROUP BY paperID) R 
+						ON (R.paperID = T.paperID) ORDER T.tot_download BY DESC");
 					break;
 
 					default:
@@ -228,14 +275,9 @@
 
 		//$temp = $conn->query("SELECT * FROM scientific_research_paper");
 
-		/*$result = $conn->query("SELECT DISTINCT * FROM 
-								(SELECT DISTINCT * FROM scientific_research_paper S NATURAL JOIN author_has_paper A
-								WHERE S.title LIKE '%$search_input%' AND S.language = '$language' AND S.release_date BETWEEN $year-5 AND $year+5 AND S.status = $status) T
-								LEFT OUTER JOIN 
-								(SELECT paperID, SUM(isViewed) AS tot_view, SUM(isLiked) AS tot_like, SUM(isDownloaded) AS tot_download FROM subscriber_likes_downloads_views_paper GROUP BY paperID) R 
-								ON (R.paperID = T.paperID)");*/
 
-		$result = $conn->query("SELECT * FROM (SELECT DISTINCT * FROM 
+
+		/*$result = $conn->query("SELECT * FROM (SELECT DISTINCT * FROM 
 								(SELECT DISTINCT * FROM scientific_research_paper S NATURAL JOIN author_has_paper A
 								WHERE S.title LIKE '%$search_input%' AND S.language = '$language' AND S.release_date BETWEEN $year-5 AND $year+5 AND S.status = $status) T
 								LEFT OUTER JOIN 
@@ -243,14 +285,16 @@
 								ON (R.paperID = T.paperID)) X 
 								LEFT OUTER JOIN
 								(SELECT paper_to_be_cited, COUNT(*) AS cite_no FROM paper_citation GROUP BY paper_to_be_cited) Y
-								ON (Y.paper_to_be_cited = X.paperID)");
+								ON (Y.paper_to_be_cited = X.paperID)");*/
 
 
 		echo "<br><br>";
 		echo "<div class='container'  id='search_container'>";
 			echo "<form>";
-				if($result->num_rows > 0){
+				//if($result->num_rows > 0){
+					echo "<p>SearchFor " . $search_input . "</p>"; ///BURAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 					while($row = $result->fetch_assoc()){
+						echo "<p>SearchIn While " . $search_input . "</p>"; ///BURAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 						echo "<div class='row-fluid'>";
 							echo "<div class='col-10'>";
 								echo "<p>" . "Title: " . $row["title"] . '<br>'. "Author: " . $row["username"] . "<br>" . "View: " . $row["tot_view"] . 
@@ -265,9 +309,12 @@
 
 						echo "<br><br>";
 					}
-				}
+				//}
+				
 			echo "</form>";
+			
 		echo "</div>";
+
   	?>
   </body>
 </html>

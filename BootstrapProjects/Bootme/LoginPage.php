@@ -47,6 +47,7 @@
 						$togo = $togo . "/SearchPage.php";
 						//echo $togo;
 						$_POST['user_username'] = $user_username;
+						$_SESSION['usernm'] = $user_username;
 						header("Location: $togo?username=".$user_username);
 					}
 					else{
@@ -73,10 +74,7 @@
 			<div class="collapse navbar-collapse" id="nvbCollapse">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item">
-						<a class="nav-link" href="#">About</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Contact Us</a>
+						<a class="nav-link" href="About.php">About</a>
 					</li>
 				</ul>        
 			</div>
