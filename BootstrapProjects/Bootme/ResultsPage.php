@@ -129,7 +129,7 @@
 		}
 
 		//year according to 
-		$year = 2017;
+		$year = 2000;
 
 		switch($search_by){
 			case 1:
@@ -140,7 +140,7 @@
 						WHERE S.title LIKE '%$search_input%' AND S.language = '$language' AND S.release_date BETWEEN $year-5 AND $year+5 AND S.status = $status) T
 						LEFT OUTER JOIN 
 						(SELECT paperID, SUM(isViewed) AS tot_view, SUM(isLiked) AS tot_like, SUM(isDownloaded) AS tot_download FROM subscriber_likes_downloads_views_paper GROUP BY paperID) R 
-						ON (R.paperID = T.paperID)");
+						ON (R.paperID = T.paperID) ORDER BY T.isLiked DESC");
 
 					break;
 
@@ -262,12 +262,12 @@
 
 
 
-		$result = $conn->query("SELECT DISTINCT * FROM 
+		/*$result = $conn->query("SELECT DISTINCT * FROM 
 								(SELECT DISTINCT * FROM scientific_research_paper S NATURAL JOIN author_has_paper A
 								WHERE S.title LIKE '%$search_input%' AND S.language = '$language' AND S.release_date BETWEEN $year-5 AND $year+5 AND S.status = $status) T
 								LEFT OUTER JOIN 
 								(SELECT paperID, SUM(isViewed) AS tot_view, SUM(isLiked) AS tot_like, SUM(isDownloaded) AS tot_download FROM subscriber_likes_downloads_views_paper GROUP BY paperID) R 
-								ON (R.paperID = T.paperID)");
+								ON (R.paperID = T.paperID)");*/
 
 
 		echo "<br><br>";
