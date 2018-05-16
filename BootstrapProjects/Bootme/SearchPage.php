@@ -102,7 +102,8 @@
 						$_POST['language'] = $language;
 						$_POST['status'] = $status;
 						$_POST['year'] = $year;
-						header("Location: $togo?search_input=".$search_input);
+						$_SESSION['usernme'] = $user_username;
+						header("Location: $togo?search_input=".$search_input."&username=".$user_username);
 					}
 				}		
 								

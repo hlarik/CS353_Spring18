@@ -42,7 +42,7 @@
 			if (!$conn) {
 				die("Connection failed: " . mysqli_connect_error());
 			}
-			$user_username = $_SESSION['username'];
+			$user_username = $_GET['username'];
 			$result = $conn->query("SELECT * FROM subscriber WHERE username = '$user_username'");
 			$row = $result->fetch_assoc();
 			
@@ -50,42 +50,71 @@
 				echo "<div class='form-row pt-5'>";
 					echo "<h1>My Profile</h1>";
 				echo "</div>";
-				echo "<div class='form-row pt-5'>";
-					echo "<div class='col-2'>";
-                    echo "<button class='btn-lg btn-primary my-2' type='submit'>Pending Papers</button>";
-				    echo "<button class='btn-lg btn-primary my-2' type='submit'>Journals</button>";
-					echo "</div>";
-					echo "<div class='col-3 pl-5'>";
-						echo "<p>Name</p>";
-						echo "<p>Username</p>";
-						echo "<p>Password</p>";
-						echo "<p>Email</p>";
-						echo "<p>Country</p>";
-						echo "<p>City</p>";
-						echo "<p>Street</p>";
-						echo "<p>Zipcode</p>";
+				echo "<form action='ReviewerProfilePage.php' method='POST'>";
+					echo "<div class='form-row pt-5'>";
+						echo "<div class='col-2'>";
+							echo "<input class='btn-lg btn-primary my-2' type='submit' name='journal' value='Journals'>";
+							echo "<input class='btn-lg btn-primary my-2' type='submit' name='pending' value='Pending Papers'>";
+						echo "</div>";
+						echo "<div class='col-3 pl-5'>";
+							echo "<p>Name</p>";
+							echo "<p>Username</p>";
+							echo "<p>Password</p>";
+							echo "<p>Email</p>";
+							echo "<p>Country</p>";
+							echo "<p>City</p>";
+							echo "<p>Street</p>";
+							echo "<p>Zipcode</p>";
+						echo"</div>";
+						echo "<div class='col-6 pl-5'>";
+								echo "<p>". $row["name"] . "</p>";
+								echo "<p>". $row["username"] . "</p>";
+								echo "<p>". $row["password"] . "</p>";
+								echo "<p>". $row["email"] . "</p>";
+								echo "<p>". $row["country"] . "</p>";
+								echo "<p>". $row["city"] . "</p>";
+								echo "<p>". $row["street"] . "</p>";
+								echo "<p>". $row["zipcode"] . "</p>";
+						echo"</div>";
 					echo"</div>";
-					echo "<div class='col-6 pl-5'>";
-							echo "<p>". $row["name"] . "</p>";
-							echo "<p>". $row["username"] . "</p>";
-							echo "<p>". $row["password"] . "</p>";
-							echo "<p>". $row["email"] . "</p>";
-							echo "<p>". $row["country"] . "</p>";
-							echo "<p>". $row["city"] . "</p>";
-							echo "<p>". $row["street"] . "</p>";
-							echo "<p>". $row["zipcode"] . "</p>";
+					echo"<div class='form-row pt-5'>";
+						echo"<div class='col-2'>";
+							echo "<input class='btn-lg btn-primary my-2' type='submit' value='DeleteAccount' name='DeleteAccount'/>";
+						echo"</div>";
 					echo"</div>";
-					echo"</div>";
-				echo"</div>";
-				echo"<div class='form-row pt-5'>";
-					echo"<div class='col-2'>";
-						echo"<button class='btn-lg btn-primary my-2' type='submit'>Delete Account</button";
-					echo"</div>";
-				echo"</div>";
+				echo"</form>";
 			echo"</div>";
+			
+			if($_SERVER['REQUEST_METHOD'] === 'POST'){
+				if(isset($_POST['DeleteAccount'])){
+					//Delte all possible tables the user may be occuring in
+					$result1 = $conn->query("DELETE FROM subscriber_comment_paper WHERE username='$user_username'");
+					$result2 = $conn->query("DELETE FROM subscriber_follows_journal WHERE username='$user_username'");
+					$result3 = $conn->query("DELETE FROM subscriber_likes_downloads_views_paper WHERE username='$user_username'");	
+					$result4 = $conn->query("DELETE FROM conference_reviewer WHERE username='$user_username'");					
+					$result5 =  $conn->query("DELETE FROM subscriber WHERE username='$user_username'");
+					if($result1 || $result2 || $result3 || $result4 || $result5){
+						$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+						$togo = substr($actual_link, 0, strpos($actual_link, '/ReviewerProfilePage.php'));
+						$togo = $togo . "/LoginPage.php";
+						//echo $togo;
+						header("Location: $togo");
+					}
+				}
+				if(isset($_POST['pending'])){
+					$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+					$togo = substr($actual_link, 0, strpos($actual_link, '/ReviewerProfilePage.php'));
+					$togo = $togo . "/pending.php";
+					header("Location: $togo?username=".$user_username);
+				}
+				if(isset($_POST['journal'])){
+					$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+					$togo = substr($actual_link, 0, strpos($actual_link, '/ReviewerProfilePage.php'));
+					$togo = $togo . "/journalPage.php";
+					header("Location: $togo?username=".$user_username);
+				}
+			}
 		?>
-	
-		
 	
 	
     <!-- Optional JavaScript -->

@@ -12,58 +12,6 @@
     <title>PURE Digital Library</title>
   </head>
   <body> 
-
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<a class="navbar-brand" href="#">PURE Digital Library</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="nav navbar-nav right">
-				<li class="active">
-					<a class="nav-link" href="#">Home</a>
-				</li>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="About.php">About</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="LoginPage.php">Sign out</a>
-				</li>
-				<!-- <li class="nav-item">
-				<a class="nav-link disabled" href="#">Disabled</a>
-				</li> -->
-			</ul>
-		</div>
-	</nav>
-
-	<div class="jumbotron text-center">
-		<div class="container">
-			<h1>PURE Digital Library</h1>
-		</div>
-	</div>
-	
-	<div class="container" id="search_container">	
-		<form>
-			<div class="form-row">
-				<div class="col-10">
-					<input class="form-control form-control-lg" type="text" placeholder="Search for articles">
-				</div>
-				<div class="col-2">
-					<button class="btn-lg btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-				</div>
-			</div>
-		</form>
-	</div>
-
-	
-	<!-- <div class="container-fluid text-center text-md-left">
-		<div class="container">
-			<div class="navbar-text pull-left">
-				<p>copyright PURE Digital Library 2018</p>
-			</div>
-		</div>
-	</div> -->
 	
 	
     <!-- Optional JavaScript -->
@@ -84,16 +32,53 @@
 		if (!$conn) {
 		die("Connection failed: " . mysqli_connect_error());
 		}
-
+		
+		$get_usernme = $_SESSION['usernme'];
+			
+		echo "<form action='SearchPage.php' method='POST'>";
+			echo "<nav class='navbar navbar-expand-lg navbar-dark bg-dark'>";
+				echo "<nav class='navbar navbar-light bg-dark'>";
+					echo "<span class='navbar-brand mb-0 h1'>PURE Digital Library</span>";
+				echo "</nav>";
+				echo "<button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation'>";
+					echo "<span class='navbar-toggler-icon'></span>";
+				echo "</button>";
+				echo "<div class='collapse navbar-collapse' id='navbarNav'>";
+					echo "<ul class='nav navbar-nav right'>";
+						echo "<li class='nav-item'>";
+							echo "<a class='nav-link active' href='#'>Home</a>";
+						echo "</li>";
+						echo "<li class='nav-item'>";
+							echo "<a class='nav-link' href='About.php'>About</a>";
+						echo "</li>";
+						echo "<li class='nav-item'>";
+							echo "<a class='nav-link' href='LoginPage.php'>Sign out</a>";
+						echo "</li>";
+						echo "<li>";
+							echo "<input class='btn btn-default navbar-btn' type='submit' name='FormBtn' value='My Profile'>";
+						echo "</li>";
+					echo "</ul>";
+				echo "</div>";
+			echo "</nav>";
+		echo "</form>";	
+		
+		echo "<div class='jumbotron text-center'>";
+			echo "<div class='container'>";
+				echo "<h1>PURE Digital Library</h1>";
+			echo "</div>";
+		echo "</div>";
+		//echo "<p> get" . $get_usernme . "</p>";
+		
 		//get info from searc page
-		$user_username = $_GET['user_username'];
+		$user_username = $_GET['username'];
 		$search_input = $_GET['search_input'];
 		$search_by = $_GET['gridRadios'];
 		$sort = $_GET['sortRadios'];
 		$language = $_GET['language'];
 		$status_input = $_GET['status'];
 		$year_input = $_GET['year'];
-
+		
+		//echo "<p> user " . $user_username . "</p>";
 
 		//$search_input = 'How to';
 
@@ -155,7 +140,7 @@
 						WHERE S.title LIKE '%$search_input%' AND S.language = '$language' AND S.release_date BETWEEN $year-5 AND $year+5 AND S.status = $status) T
 						LEFT OUTER JOIN 
 						(SELECT paperID, SUM(isViewed) AS tot_view, SUM(isLiked) AS tot_like, SUM(isDownloaded) AS tot_download FROM subscriber_likes_downloads_views_paper GROUP BY paperID) R 
-						ON (R.paperID = T.paperID) ORDER T.tot_view BY DESC");
+						ON (R.paperID = T.paperID)");
 
 					break;
 
@@ -277,27 +262,22 @@
 
 
 
-		/*$result = $conn->query("SELECT * FROM (SELECT DISTINCT * FROM 
+		$result = $conn->query("SELECT DISTINCT * FROM 
 								(SELECT DISTINCT * FROM scientific_research_paper S NATURAL JOIN author_has_paper A
 								WHERE S.title LIKE '%$search_input%' AND S.language = '$language' AND S.release_date BETWEEN $year-5 AND $year+5 AND S.status = $status) T
 								LEFT OUTER JOIN 
 								(SELECT paperID, SUM(isViewed) AS tot_view, SUM(isLiked) AS tot_like, SUM(isDownloaded) AS tot_download FROM subscriber_likes_downloads_views_paper GROUP BY paperID) R 
-								ON (R.paperID = T.paperID)) X 
-								LEFT OUTER JOIN
-								(SELECT paper_to_be_cited, COUNT(*) AS cite_no FROM paper_citation GROUP BY paper_to_be_cited) Y
-								ON (Y.paper_to_be_cited = X.paperID)");*/
+								ON (R.paperID = T.paperID)");
 
 
 		echo "<br><br>";
-		echo "<div class='container'  id='search_container'>";
+		echo "<div class='container'>";
 			echo "<form>";
-				//if($result->num_rows > 0){
-					echo "<p>SearchFor " . $search_input . "</p>"; ///BURAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				if($result->num_rows > 0){
 					while($row = $result->fetch_assoc()){
-						echo "<p>SearchIn While " . $search_input . "</p>"; ///BURAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 						echo "<div class='row-fluid'>";
 							echo "<div class='col-10'>";
-								echo "<p>" . "Title: " . $row["title"] . '<br>'. "Author: " . $row["username"] . "<br>" . "View: " . $row["tot_view"] . 
+							/*	echo "<p>" . "Title: " . $row["title"] . '<br>'. "Author: " . $row["username"] . "<br>" . "View: " . $row["tot_view"] . 
 									"       " . "Like: " . $row["tot_like"] . 
 									"       " . "Download: " . $row["tot_download"] . 
 									"       " . "Cited: " . $row["cite_no"] . "</p>";
@@ -305,16 +285,61 @@
 							echo "<div class='col-12'>";
 								echo "<input type='submit' name='view' class='btn btn-primary' value='view'/>";
 							echo "</div>";
+						echo "</div>";*/
+
+						echo "<br>";
+						echo "<div class='card border-primary mb-3' >";
+							echo "<div class='card-body'>";
+								echo "<h4 class='card-title'>" . $row["title"] . "</h4>";
+								echo "<h5 class='card-subtitle mb-2 text-muted'>" . $row["username"] . "</h5>";
+								echo "<h6>" . "View: " . $row["tot_view"] . "     Like: " . $row["tot_like"] . "</h6>";
+								echo "<h6>" . "Download: " . $row["tot_download"] . "     Cited: " . $row["cite_no"] . "</h6>";
+								//echo "<input class='btn btn-primary' type='submit' name='view' value='view'/>";
+								$_POST['user_username'] = $user_username;
+								$_POST['user_username'] = $row["paperID"];
+								echo "<a href=./ViewPaperPage.php?paperID=" . $row["paperID"] . "&username=" . $user_username . ">View</a>";
+							echo "</div>";
 						echo "</div>";
-
-						echo "<br><br>";
 					}
-				//}
-				
+				}
 			echo "</form>";
-			
 		echo "</div>";
-
+		
+		if(isset($_POST['FormBtn'])){
+			$result = $conn->query("SELECT * FROM subscriber WHERE username = '$get_usernme'");
+			$row = $result->fetch_assoc();
+			$_SESSION['username'] = $get_usernme;
+			
+			$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			$togo = substr($actual_link, 0, strpos($actual_link, '/ResultsPage.php'));
+			
+			if(  $row["privilegeID"] == 1 ){
+				$togo = $togo . "/AuthorProfilePage.php";
+				header("Location: $togo?username=".$user_username);
+			}
+			elseif ( $row["privilegeID"] == 2) {
+				$togo = $togo . "/EditorProfilePage.php";
+				header("Location: $togo?username=".$user_username);	
+			}
+			elseif ( $row["privilegeID"] == 3 ) {
+				$togo = $togo . "/ReviewerProfilePage.php";
+				header("Location: $togo?username=".$user_username);
+			}
+			elseif ( $row["privilegeID"] == 4 ) {
+				$togo = $togo . "/RegularUserProfilePage.php";
+				header("Location: $togo?username=".$user_username);
+			}
+		}
+		/*if(isset($_POST['view'])){
+			$result = $conn->query("SELECT * FROM scientific_research_paper WHERE paperID = 1000");
+			$row = $result->fetch_assoc();
+			$_SESSION['username'] = $user_username;
+			
+			$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			$togo = substr($actual_link, 0, strpos($actual_link, '/ResultsPage.php'));
+			$togo = $togo . "/ViewPaperPage.php";
+			header("Location: $togo?paperID=".$row["paperID"]."&username=".$user_username);
+		}*/
   	?>
   </body>
 </html>

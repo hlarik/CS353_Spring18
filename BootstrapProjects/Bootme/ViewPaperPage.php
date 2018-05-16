@@ -14,32 +14,7 @@
   
 	
 	
-	<div class="container">	
-		<form action="ViewPaperPage.php" method="POST">
-			<div class="row pt-5">
-				<div class="col-10">
-					<div class="embed-responsive embed-responsive-4by3">
-					  <iframe class="embed-responsive-item" src="Content/Project Design Report.pdf" type="application/pdf"></iframe>
-					</div>
-				</div>
-				<div class="col-2">
-					<div class="btn-group-vertical">
-						<input class="btn-md btn-primary my-2" type="submit" name="Like" value="Like" ng-click="levelOU()"/>
-						<input class="btn-md btn-primary my-2" type="submit" name="Download" value="Download"/>
-						<input class="btn-md btn-primary my-2" type="submit" name="Follow Journal" value="Follow Journal"/>
-					</div>
-				</div>
-			</div>
-
-			<div class="form-row pt-5">
-				<div class="form-group col-8">
-					<label for="commentArea">Write a comment:</label>
-					<textarea class="form-control" id="commentArea" rows="3" name="comment" placeholder="You may have to refresh to see your comment, sorry for the inconveniency (T_T) "></textarea>
-					<input class="btn-sm btn-primary my-2" type="submit" name="submit" value="submit"/>
-				</div>
-			</div>
-		</form>
-	</div>
+	
 	
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -58,11 +33,13 @@
 		if (!$conn) {
 		die("Connection failed: " . mysqli_connect_error());
 		}
-		//$user_username = $_GET['user_username'];
+		$user_username = $_GET['user_username'];
+		$user_username = "KaanKuhn";
+		//$user_username = $_SESSION['user_username'];
 		//$user_username = "KaanKuhn";
 		//give a predefined paperID for now
 		//$paperID = $_GET['paperID'];
-		$user_username = $_SESSION[''];
+		//$user_username = $_SESSION['username'];
 		$paperID = 1001;
 
 		//insert ignore ignores if
@@ -82,7 +59,7 @@
 				echo "<div class='collapse navbar-collapse' id='navbarNav'>";
 					echo "<ul class='nav navbar-nav right'>";
 						echo "<li class='nav-item'>";
-							echo "<a class='nav-link active' href='#'>Home</a>";
+							echo "<a class='nav-link active' href='SearchPage.php'>Home</a>";
 						echo "</li>";
 						echo "<li class='nav-item'>";
 							echo "<a class='nav-link' href='About.php'>About</a>";
@@ -97,6 +74,35 @@
 				echo "</div>";
 			echo "</nav>";
 		echo "</form>";	
+		
+		
+		echo "<div class='container'>";
+		echo "<form action='ViewPaperPage.php' method='POST'>";
+			echo "<div class='row pt-5'>";
+				echo "<div class='col-10'>";
+					echo "<div class='embed-responsive embed-responsive-4by3'>";
+					  echo "<iframe class='embed-responsive-item' src='Content/Project Design Report.pdf' type='application/pdf'></iframe>";
+					echo "</div>";
+				echo "</div>";
+				echo "<div class='col-2'>";
+					echo "<div class='btn-group-vertical'>";
+						echo "<input class='btn-md btn-primary my-2' type='submit' name='Like' value='Like' ng-click='levelOU()'/>";
+						echo "<input class='btn-md btn-primary my-2' type='submit' name='Download' value='Download'/>";
+						echo "<input class='btn-md btn-primary my-2' type='submit' name='Follow Journal' value='Follow Journal'/>";
+					echo "</div>";
+				echo "</div>";
+			echo "</div>";
+
+			echo "<div class='form-row pt-5'>";
+				echo "<div class='form-group col-8'>";
+					echo "<label for='commentArea'>Write a comment:</label>";
+					echo "<textarea class='form-control' id='commentArea' rows='3' name='comment' placeholder='You may have to refresh to see your comment, sorry for the inconvenience '></textarea>";
+					echo "<input class='btn-sm btn-primary my-2' type='submit' name='submit' value='submit'/>";
+				echo "</div>";
+			echo "</div>";
+		echo "</form>";
+	echo "</div>";
+		
 		
 		echo "<br><br>";
 		echo "<div class='container'  id='comment_container'>";
@@ -158,31 +164,30 @@
 			}
 			
 			if(isset($_POST['FormBtn'])){
-					$result = $conn->query("SELECT * FROM subscriber WHERE username = '$user_username'");
-					$row = $result->fetch_assoc();
-					$_SESSION['username'] = $user_username;
-					
-					$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-					$togo = substr($actual_link, 0, strpos($actual_link, '/SearchPage.php'));
-					
-					//header("Location: $togo?username=".$user_username);
-					if(  $row["privilegeID"] == 1 ){
-						$togo = $togo . "/AuthorProfilePage.php";
-						header("Location: $togo?username=".$user_username);
-					}
-					elseif ( $row["privilegeID"] == 2) {
-						$togo = $togo . "/EditorProfilePage.php";
-						header("Location: $togo?username=".$user_username);	
-					}
-					elseif ( $row["privilegeID"] == 3 ) {
-						$togo = $togo . "/ReviewerProfilePage.php";
-						header("Location: $togo?username=".$user_username);
-					}
-					elseif ( $row["privilegeID"] == 4 ) {
-						$togo = $togo . "/RegularUserProfilePage.php";
-						header("Location: $togo?username=".$user_username);
-					}
+				$result = $conn->query("SELECT * FROM subscriber WHERE username = '$user_username'");
+				$row = $result->fetch_assoc();
+				$_SESSION['username'] = $user_username;
+				
+				$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+				$togo = substr($actual_link, 0, strpos($actual_link, '/ViewPaperPage.php'));
+				
+				if(  $row["privilegeID"] == 1 ){
+					$togo = $togo . "/AuthorProfilePage.php";
+					header("Location: $togo?username=".$user_username);
 				}
+				elseif ( $row["privilegeID"] == 2) {
+					$togo = $togo . "/EditorProfilePage.php";
+					header("Location: $togo?username=".$user_username);	
+				}
+				elseif ( $row["privilegeID"] == 3 ) {
+					$togo = $togo . "/ReviewerProfilePage.php";
+					header("Location: $togo?username=".$user_username);
+				}
+				elseif ( $row["privilegeID"] == 4 ) {
+					$togo = $togo . "/RegularUserProfilePage.php";
+					header("Location: $togo?username=".$user_username);
+				}
+			}
         }
   	?>
 

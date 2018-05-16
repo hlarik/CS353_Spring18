@@ -52,12 +52,12 @@
 			echo "<div class='form-row pt-5'>";
 				echo "<h1>My Profile</h1>";
 			echo "</div>";
-				echo "<form>";
+				echo "<form action='AuthorProfilePage.php' method='POST'>";
 					echo "<div class='form-row pt-5'>";
 						echo "<div class='col-2'>";
-							echo "<button class='btn-lg btn-primary my-2' type=submit'>My Papers</button>";
-							echo "<button class='btn-lg btn-primary my-2' type='submit'>Journals</button>";
-							echo "<button class='btn-lg btn-primary my-2' type='submit'>Submit Paper</button>";
+							echo "<input class='btn-lg btn-primary my-2' type='submit' name='mypaper' value='My Paper'>";
+							echo "<input class='btn-lg btn-primary my-2' type='submit' name='journal' value='Journals'>";
+							echo "<input class='btn-lg btn-primary my-2' type='submit' name='SubmitPaper' value='Submit Paper'>";
 						echo "</div>";
 						echo "<div class='col-2 pl-5'>";
 							echo "<p>Name</p>";
@@ -80,14 +80,50 @@
 							echo "<p>". $row["zipcode"] . "</p>";
 						echo "</div>";
 					echo "</div>";
-					//echo "<p> . Username" . $user_username . "</p>"; ///BURAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 					echo "<div class='form-row pt-5'>";
 						echo "<div class='col-2'>";
-							echo "<button class='btn-lg btn-primary my-2' type='submit'>Delete Account</button>";
+							echo "<input class='btn-lg btn-primary my-2' type='submit' value='DeleteAccount' name='DeleteAccount'/>";
 						echo "</div>";
 					echo "</div>";
 				echo "</form>";
 			echo "</div>";
+
+			if($_SERVER['REQUEST_METHOD'] === 'POST'){
+				if(isset($_POST['DeleteAccount'])){
+					//Delte all possible tables the user may be occuring in
+					$result1 = $conn->query("DELETE FROM subscriber_comment_paper WHERE username='$user_username'");
+					$result2 = $conn->query("DELETE FROM subscriber_follows_journal WHERE username='$user_username'");
+					$result3 = $conn->query("DELETE FROM subscriber_likes_downloads_views_paper WHERE username='$user_username'");
+					$result4 = $conn->query("DELETE FROM author_has_paper WHERE username='$user_username'");
+					$result5 = $conn->query("DELETE FROM author_institution WHERE username='$user_username'");						
+					$result6 =  $conn->query("DELETE FROM subscriber WHERE username='$user_username'");
+					if($result1 || $result2 || $result3 || $result4 || $result5 || $result6){
+						$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+						$togo = substr($actual_link, 0, strpos($actual_link, '/AuthorProfilePage.php'));
+						$togo = $togo . "/LoginPage.php";
+						//echo $togo;
+						header("Location: $togo");
+					}
+				}
+				if(isset($_POST['SubmitPaper'])){
+					$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+					$togo = substr($actual_link, 0, strpos($actual_link, '/AuthorProfilePage.php'));
+					$togo = $togo . "/submitPage.php";
+					header("Location: $togo?username=".$user_username);
+				}
+				if(isset($_POST['mypaper'])){
+					$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+					$togo = substr($actual_link, 0, strpos($actual_link, '/AuthorProfilePage.php'));
+					$togo = $togo . "/mypapers.php";
+					header("Location: $togo?username=".$user_username);
+				}
+				if(isset($_POST['journal'])){
+					$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+					$togo = substr($actual_link, 0, strpos($actual_link, '/AuthorProfilePage.php'));
+					$togo = $togo . "/journalPage.php";
+					header("Location: $togo?username=".$user_username);
+				}
+			}
 		?>
 	
     <!-- Optional JavaScript -->

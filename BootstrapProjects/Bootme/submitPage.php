@@ -28,62 +28,29 @@
 		$conn = mysqli_connect($url, $username, $password, $dbname);
 
 		if (!$conn) {
-		die("Connection failed: " . mysqli_connect_error());
+			die("Connection failed: " . mysqli_connect_error());
 		}
 
         $status = 1; ////////?????????
         $paperID = 1; //////////////////?????
       
 		if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        if(isset($_POST['button1'])){
-          $title = $_POST["title"];
-          $language = $_POST["language"];
-          $page = $_POST["page"];
-          $date = $_POST["date"];
-          $conference = $_POST["conference"]; ///?????
-          
-       /*   $conferenceName ="";
-            
-          if($conference == "One"){
-            $conferenceName = "One";
-          }
-          elseif ($conference == "Two") {
-            $usertype = "Two";
-          }
-          elseif ($conference == "Three") {
-            $usertype = "Three";
-          }*/
-
-       //   if($title != '' && $language != '' && $page != '' && $date != '' && $conferenceName != ''){
-            //$result = $conn->query("INSERT INTO subscriber (username, password, privilegeID, email, name, country, city, street, zipcode) VALUES ('$user_username', '$user_password', '$privilegeID', '$email', '$name', '$country', '$city', '$street', '$zipcode')");
-            $result = $conn->query("INSERT INTO scientific_research_paper (paperID, title, status, page_number, language, release_date) 
-                                  VALUES ($paperID, '$title', $status, $page, '$language', $date)");
-          /*  if($result){
-              $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-              $togo = substr($actual_link, 0, strpos($actual_link, '/signupPage.php'));
-              $togo = $togo . "/LoginPage.php";
-              //echo $togo;
-              header("Location: $togo");
-            }
-            else{
-              /*$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-              $togo = substr($actual_link, 0, strpos($actual_link, '/signupPage.php'));
-              $togo = $togo . "/LoginPage.php";
-              //echo $togo;
-              header("Location: $togo");*/
-             
-        //    }
-          }
+			if(isset($_POST['button1'])){
+				$title = $_POST["title"];
+				$language = $_POST["language"];
+				$page = $_POST["page"];
+				$date = $_POST["date"];
+				$conference = $_POST["conference"]; ///?????
+        
+				if($title != '' && $language != '' && $page != '' && $date != '' && $conferenceName != ''){
+					$result = $conn->query("INSERT INTO scientific_research_paper (paperID, title, status, page_number, language, release_date) 
+										VALUES ($paperID, '$title', $status, $page, '$language', $date)");
+				}
+			}
         }
-      
 
-       
-
-		
-
-		
   	?>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<a class="navbar-brand" href="#">PURE Digital Library</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -92,86 +59,77 @@
 		<div class="collapse navbar-collapse" id="navbarNav">
 			<ul class="nav navbar-nav right">
 				<li class="active">
-					<a class="nav-link" href="#">Home</a>
-				</li>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">About</a>
+					<a class="nav-link" href="SearchPage.php">Home</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">Our Team</a>
+					<a class="nav-link" href="About.php">About</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">Sign out</a>
+					<a class="nav-link" href="LoginPage.php">Sign out</a>
 				</li>
-				<!-- <li class="nav-item">
-				<a class="nav-link disabled" href="#">Disabled</a>
-				</li> -->
 			</ul>
 		</div>
-	</nav>
- 
+	</nav>        
       
-      <!--<div class="container">
-          <img class="img-responensive" src="aaaaa.png" alt="">
-      </div>-->
-          
+	<div class=container> 
+		<br><br>  
+		<header id="headerSection">
+			<div class="overlay">
+				<h1>SUBMIT PAPER</h1>
+			</div>
+		</header>
+		<br><br>  
+	</div>
       
-      <header id="headerSection">
-          <div class="overlay">
-             
-                      <h1 class="text-center">SUBMIT PAPER</h1>
-               
-          </div>
-      </header>
-      
-      
-      
-      
-  
-    
-    
-         <div class=container>
-          <form action="submitPage.php" method="POST">   
-              <div class="form-group row">
-                  <label for="inputUserName" class="col-sm-2 col-form-label">Title</label>
-                  <div class="col-sm-10">
-                      <input type="title" class="form-control" id="title" name="title"> 
-                  </div>
-              </div>
-              <div class="form-group row">
-                  <label for="inputUserName" class="col-sm-2 col-form-label">Page Number</label>
-                  <div class="col-sm-10">
-                      <input type="page" class="form-control" id="page" name="page">
-                  </div>
-              </div>
-              <div class="form-group row">
-                  <label for="inputUserName" class="col-sm-2 col-form-label">Language</label>
-                  <div class="col-sm-10">
-                      <input type="language" class="form-control" id="language" name="language" >
-                  </div>
-              </div>
-              <div class="form-group row">
-                  <label for="inputUserName" class="col-sm-2 col-form-label">Release Date</label>
-                  <div class="col-sm-10">
-                      <input type="date" class="form-control" id="date" name="date">
-                  </div>
-              </div>
-              
-              
-              <div class="form-group row">
-                  <select class="custom-select" name="conference" required>
-                      <option value="">Conference Name</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                  </select>
-                  <div class="invalid-feedback">Example invalid custom select feedback</div>
-              </div>
-              
-              <input type="submit" class="btn btn-outline-primary" name="button1" value ="Upload File">  
-            </form>
-          </div>
+	<div class=container>
+		<form action="submitPage.php" method="POST">   
+			<div class="form-group row">
+				<label for="title" class="col-sm-2 col-form-label">Title</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="title" name="title"> 
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="page" class="col-sm-2 col-form-label">Page Number</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="page" name="page" >
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="language" class="col-sm-2 col-form-label">Language</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="language" name="language" >
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="date" class="col-sm-2 col-form-label">Release Date</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="date" name="date">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<select class="custom-select" name="conference" required>
+					<option value="">Conference Name</option>
+					<option value="1">One</option>
+					<option value="2">Two</option>
+					<option value="3">Three</option>
+				</select>
+				<div class="invalid-feedback">Example invalid custom select feedback</div>
+			</div>
+	
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Upload</span>
+				</div>
+				<div class="custom-file">
+					<input type="file" class="custom-file-input" id="inputGroupFile01">
+					<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+				</div>
+			</div> 
+			<input type="submit" class="btn-lg btn-primary my-2" value="submit" name="button1" >
+		</form>
+	</div>
       
 
       

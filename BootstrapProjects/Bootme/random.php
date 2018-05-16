@@ -37,14 +37,16 @@
 			//echo "<div class='table-responsive'>";
 			
 				echo "<table class='table table-hover table-inverse'>";
-		  
+		  		$input = " hello";
 				if ($result->num_rows > 0) {
 					// output data of each row
 					while($row = $result->fetch_assoc()) {
-							
-						echo "<p>" . $row["username"] . "</p>";
-						echo "<p>" . $row["email"] . "</p>";
-						echo "<p>" . $row["password"] . "</p>";		
+							if(strcmp(trim($input), "hello")==0){
+								echo "<p>" . "Meow" . "</p>";
+							}
+							else{
+								echo "<p>" . "No meow" . "</p>";
+							}
 					}
 				} else {
 					echo "0 results";
